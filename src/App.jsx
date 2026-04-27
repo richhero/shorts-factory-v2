@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import './styles/Layout.css';
 import './styles/Editor.css';
 import './styles/Modal.css';
@@ -100,53 +100,74 @@ const ExportModal = ({ isOpen, onClose }) => {
 };
 
 /* --- 지침서 해석 검증 맵 (시간 매핑 시각화 강화) --- */
-const TimelineAnalysisMap = () => {
-  const analysisData = [
-    { seq: 1, target: '00:00', source: '00:13 ~ 00:18', duration: '5s', action: '하이라이트 전방 배치', note: '13초 부분을 0초로 이동' },
-    { seq: 2, target: '00:05', source: '00:00 ~ 00:05', duration: '5s', action: '오프닝 배치', note: '원본 0초를 5초로 이동' },
-    { seq: 3, target: '00:30', source: '00:20 ~ 00:25', duration: '5s', action: '클로징 배치', note: '특정 구간 30초로 이동' },
-  ];
+const TimelineAnalysisMap = ({ instruction }) => {
+  const analysisData = useMemo(() => {
+    if (!instruction) return [];
+
+    // 정규표현식: '13초 -> 0초', '00:13 -> 00:00', '13 -> 0' 등의 패턴 추출
+    const mappingRegex = /(\d{1,2}:?\d{0,2})\s*(?:초)?\s*->\s*(\d{1,2}:?\d{0,2})\s*(?:초)?/g;
+    const matches = [...instruction.matchAll(mappingRegex)];
+
+    return matches.map((match, index) => ({
+      seq: index + 1,
+      source: match[1],
+      target: match[2],
+      duration: '분석 중...',
+      action: '시간 매핑 적용',
+      note: `지침서의 ${match[1]} 지점을 ${match[2]}로 이동 배치했습니다.`
+    }));
+  }, [instruction]);
+
   return (
     <div className="analysis-map-container">
       <div className="section-header-mini"><CheckCircle2 size={14} color="var(--accent-blue)" /> <span>지침서 해석 검증 (Timeline Mapping)</span></div>
-      <table className="analysis-table">
-        <thead>
-          <tr>
-            <th>순서</th>
-            <th>결과 시점 (Target)</th>
-            <th>원본 소스 (Source)</th>
-            <th>액션 / 의도</th>
-          </tr>
-        </thead>
-        <tbody>
-          {analysisData.map(item => (
-            <tr key={item.seq}>
-              <td style={{ opacity: 0.5 }}>{item.seq}</td>
-              <td className="highlight-blue">
-                <div className="time-mapping">
-                  <ArrowRightLeft size={10} style={{ marginRight: '4px' }} />
-                  {item.target}
-                </div>
-              </td>
-              <td className="highlight-purple">{item.source} <span className="duration-tag">{item.duration}</span></td>
-              <td>
-                <div className="action-text">{item.action}</div>
-                <div className="note-text">{item.note}</div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div className="mapping-status">
-        <Zap size={10} color="var(--accent-purple)" />
-        <span>AI가 원본의 13초 지점을 최우선 하이라이트로 분석하여 0초에 배치했습니다.</span>
-      </div>
+      {analysisData.length > 0 ? (
+        <>
+          <table className="analysis-table">
+            <thead>
+              <tr>
+                <th>순서</th>
+                <th>결과 시점 (Target)</th>
+                <th>원본 소스 (Source)</th>
+                <th>액션 / 의도</th>
+              </tr>
+            </thead>
+            <tbody>
+              {analysisData.map(item => (
+                <tr key={item.seq}>
+                  <td style={{ opacity: 0.5 }}>{item.seq}</td>
+                  <td className="highlight-blue">
+                    <div className="time-mapping">
+                      <ArrowRightLeft size={10} style={{ marginRight: '4px' }} />
+                      {item.target}
+                    </div>
+                  </td>
+                  <td className="highlight-purple">{item.source} <span className="duration-tag">{item.duration}</span></td>
+                  <td>
+                    <div className="action-text">{item.action}</div>
+                    <div className="note-text">{item.note}</div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="mapping-status">
+            <Zap size={10} color="var(--accent-purple)" />
+            <span>AI가 입력된 지침에서 {analysisData.length}개의 시간 매핑 포인트를 추출하여 배치했습니다.</span>
+          </div>
+        </>
+      ) : (
+        <div className="empty-analysis-state" style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '13px', border: '1px dashed var(--border-color)', borderRadius: '8px', marginTop: '10px' }}>
+          지침서에 '13초 -> 0초'와 같은 시간 매핑 정보를 입력하면<br/>AI가 분석하여 이곳에 표시합니다.
+        </div>
+      )}
     </div>
   );
 };
 
 const VideoEditor = ({ setIsExportModalOpen }) => {
   const [inputMode, setInputMode] = useState('json');
+  const [instruction, setInstruction] = useState('');
 
   return (
     <div className="editor-container">
@@ -176,11 +197,16 @@ const VideoEditor = ({ setIsExportModalOpen }) => {
               <button className={inputMode === 'json' ? 'active' : ''} onClick={() => setInputMode('json')}>JSON</button>
               <button className={inputMode === 'direct' ? 'active' : ''} onClick={() => setInputMode('direct')}>직접 입력</button>
             </div>
-            <textarea className="direct-textarea" placeholder="지침을 입력하세요..."></textarea>
+            <textarea 
+              className="direct-textarea" 
+              placeholder="지침을 입력하세요... (예: 13초 -> 0초로 이동)"
+              value={instruction}
+              onChange={(e) => setInstruction(e.target.value)}
+            ></textarea>
           </div>
 
           <div className="panel-section">
-             <TimelineAnalysisMap />
+             <TimelineAnalysisMap instruction={instruction} />
           </div>
 
           <div className="panel-section">
