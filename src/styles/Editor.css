@@ -1,0 +1,59 @@
+/* =========================================
+   Editor.css - 편집 화면, 프리뷰, 도구 패널, 타임라인
+   ========================================= */
+
+/* --- 에디터 컨테이너 --- */
+.editor-container { display: flex; flex-direction: column; height: calc(100vh - 52px); }
+.editor-top-row { display: flex; flex: 2; gap: 1px; background-color: var(--border-color); }
+
+/* --- 듀얼 프리뷰 --- */
+.dual-preview-container { flex: 1.6; background: var(--bg-color); display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 50px; gap: 12px; padding: 16px; }
+.preview-box { display: flex; flex-direction: column; gap: 8px; }
+.preview-label { font-size: 9px; font-weight: 800; color: var(--text-dim); letter-spacing: 1px; }
+.video-canvas.mini { flex: 1; background: #000; border-radius: 10px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; position: relative; }
+.source .video-canvas.mini { border-color: var(--accent-blue); }
+.result .video-canvas.mini { border-color: var(--accent-purple); }
+.upload-overlay { color: var(--accent-blue); text-align: center; cursor: pointer; }
+.upload-overlay p { font-size: 10px; margin-top: 8px; }
+
+.player-controls { grid-column: span 2; border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; gap: 20px; }
+.time-display { font-size: 11px; font-family: monospace; color: var(--text-dim); }
+
+/* --- 도구 패널 --- */
+.tool-panel { width: 400px; background-color: var(--sidebar-bg); padding: 16px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto; border-left: 1px solid var(--border-color); }
+.panel-section { background: rgba(255, 255, 255, 0.03); padding: 12px; border-radius: 10px; border: 1px solid var(--border-color); }
+.panel-section h3 { font-size: 10px; color: var(--text-dim); margin-bottom: 10px; text-transform: uppercase; }
+
+.sub-tool-btn { background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.sub-tool-btn.primary { background: var(--accent-blue); border: none; font-weight: 600; }
+.full { width: 100%; }
+.mb-3 { margin-bottom: 12px; }
+
+.input-tab-group { display: flex; background: var(--bg-color); padding: 4px; border-radius: 8px; margin-bottom: 12px; }
+.input-tab-group button { flex: 1; background: transparent; border: none; color: var(--text-dim); padding: 6px; font-size: 11px; cursor: pointer; border-radius: 6px; }
+.input-tab-group button.active { background: var(--hover-bg); color: var(--accent-blue); font-weight: 700; }
+.direct-textarea { width: 100%; height: 80px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; color: var(--text-main); font-size: 11px; outline: none; }
+
+/* 지침서 검증 표 */
+.analysis-table { width: 100%; border-collapse: collapse; font-size: 10px; background: rgba(0,0,0,0.2); border-radius: 6px; overflow: hidden; margin-top: 8px; }
+.analysis-table th { background: var(--hover-bg); color: var(--text-dim); padding: 6px; text-align: left; }
+.analysis-table td { padding: 6px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.highlight-blue { color: var(--accent-blue); font-weight: 700; }
+.highlight-purple { color: var(--accent-purple); font-weight: 700; }
+
+/* 툴 그리드 */
+.tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.tool-action-btn { background: var(--bg-color); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; color: var(--text-main); }
+.tool-action-btn span { font-size: 10px; }
+
+.main-execute-btn { margin-top: auto; padding: 16px; background: linear-gradient(to right, var(--accent-blue), var(--accent-purple)); border: none; border-radius: 10px; color: white; font-weight: 800; font-size: 14px; cursor: pointer; }
+
+/* --- 타임라인 --- */
+.timeline-section { flex: 1.2; background-color: var(--bg-color); border-top: 1px solid var(--border-color); position: relative; }
+.timeline-track { height: 44px; display: flex; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.03); }
+.track-label { width: 120px; font-size: 11px; color: var(--text-dim); padding-left: 16px; }
+.track-content { flex: 1; position: relative; }
+.clip { position: absolute; height: 30px; top: 7px; border-radius: 6px; font-size: 10px; padding: 0 12px; display: flex; align-items: center; }
+.sub-clip { background: rgba(0, 163, 255, 0.2); border: 1px solid var(--accent-blue); }
+.video-clip { background: rgba(168, 85, 247, 0.2); border: 1px solid var(--accent-purple); }
+.playhead { position: absolute; top: 0; bottom: 0; width: 2px; background: #ff0000; left: 35%; z-index: 50; }
