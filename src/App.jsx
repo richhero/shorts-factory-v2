@@ -28,7 +28,10 @@ import {
   ArrowRightLeft,
   CheckCircle2,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  TrendingUp,
+  Calendar,
+  GraduationCap
 } from 'lucide-react';
 
 /* --- 최종 통합 내여보내기 모달 (다크 모드 최적화) --- */
@@ -241,11 +244,19 @@ function App() {
   const [activeSubTab, setActiveSubTab] = useState('rendering');
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
+  const handleCategoryClick = (id) => {
+    setActiveTab(id);
+    if (id === 'discovery') setActiveSubTab('trends');
+    else if (id === 'editor') setActiveSubTab('rendering');
+    else if (id === 'automation') setActiveSubTab('scheduling');
+    else if (id === 'education') setActiveSubTab('classes');
+  };
+
   return (
     <div className="app-container">
       <Sidebar 
         activeTab={activeTab} 
-        setActiveTab={setActiveTab} 
+        setActiveTab={handleCategoryClick} 
         activeSubTab={activeSubTab} 
         setActiveSubTab={setActiveSubTab} 
       />
@@ -270,10 +281,30 @@ function App() {
 
 const Sidebar = ({ activeTab, setActiveTab, activeSubTab, setActiveSubTab }) => {
   const categories = [
-    { id: 'discovery', label: '디스커버리', icon: <Search size={16} /> },
-    { id: 'editor', label: 'AI 영상편집', icon: <Scissors size={16} />, subItems: [{ id: 'rendering', label: 'AI 영상 렌더링', icon: <Video size={14} /> }] },
-    { id: 'automation', label: '자동화', icon: <Zap size={16} /> },
-    { id: 'education', label: '교육', icon: <Monitor size={16} /> },
+    { 
+      id: 'discovery', 
+      label: '디스커버리', 
+      icon: <Search size={16} />,
+      subItems: [{ id: 'trends', label: '트렌드 분석', icon: <TrendingUp size={14} /> }]
+    },
+    { 
+      id: 'editor', 
+      label: 'AI 영상편집', 
+      icon: <Scissors size={16} />, 
+      subItems: [{ id: 'rendering', label: 'AI 영상 렌더링', icon: <Video size={14} /> }] 
+    },
+    { 
+      id: 'automation', 
+      label: '자동화', 
+      icon: <Zap size={16} />,
+      subItems: [{ id: 'scheduling', label: '예약 업로드', icon: <Calendar size={14} /> }]
+    },
+    { 
+      id: 'education', 
+      label: '교육', 
+      icon: <Monitor size={16} />,
+      subItems: [{ id: 'classes', label: '마스터 클래스', icon: <GraduationCap size={14} /> }]
+    },
   ];
 
   const activeCategory = categories.find(c => c.id === activeTab);
@@ -316,9 +347,9 @@ const Sidebar = ({ activeTab, setActiveTab, activeSubTab, setActiveSubTab }) => 
 
       <div className="menu-list">
         <div className="menu-section-title">메인 메뉴</div>
-        <div className="menu-item active">
-          <Layers size={14} />
-          <span>워크스페이스</span>
+        <div className="menu-item">
+          <Settings size={14} />
+          <span>환경 설정</span>
         </div>
       </div>
 
