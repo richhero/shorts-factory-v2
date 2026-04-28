@@ -26,7 +26,9 @@ import {
   FileCode,
   Layers,
   ArrowRightLeft,
-  CheckCircle2
+  CheckCircle2,
+  ChevronDown,
+  ChevronRight
 } from 'lucide-react';
 
 /* --- 최종 통합 내여보내기 모달 (다크 모드 최적화) --- */
@@ -236,38 +238,106 @@ const VideoEditor = ({ setIsExportModalOpen }) => {
 
 function App() {
   const [activeTab, setActiveTab] = useState('editor');
+  const [activeSubTab, setActiveSubTab] = useState('rendering');
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
   return (
     <div className="app-container">
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Sidebar 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+        activeSubTab={activeSubTab} 
+        setActiveSubTab={setActiveSubTab} 
+      />
       <main className="workspace">
         <header className="workspace-header">
-          <div className="breadcrumb">UCE v15.6 / AI 영상편집</div>
+          <div className="breadcrumb">UCE v15.6 / {activeTab === 'editor' ? 'AI 영상편집' : '준비 중'}</div>
           <div className="header-actions">
             <button className="btn-export" onClick={() => setIsExportModalOpen(true)}><Download size={14} /> 내보내기</button>
             <button className="btn-new-project"><RotateCcw size={14} /> 새 프로젝트</button>
           </div>
         </header>
-        {activeTab === 'editor' ? <VideoEditor setIsExportModalOpen={setIsExportModalOpen} /> : <div className="workspace-content"><h2>준비 중...</h2></div>}
+        {activeTab === 'editor' && activeSubTab === 'rendering' ? (
+          <VideoEditor setIsExportModalOpen={setIsExportModalOpen} />
+        ) : (
+          <div className="workspace-content"><h2>준비 중...</h2></div>
+        )}
         <ExportModal isOpen={isExportModalOpen} onClose={() => setIsExportModalOpen(false)} />
       </main>
     </div>
   );
 }
 
-const Sidebar = ({ activeTab, setActiveTab }) => {
+const Sidebar = ({ activeTab, setActiveTab, activeSubTab, setActiveSubTab }) => {
+  const [isEditorOpen, setIsEditorOpen] = useState(true);
+
   const categories = [
     { id: 'discovery', label: '디스커버리', icon: <Search size={16} /> },
     { id: 'editor', label: 'AI 영상편집', icon: <Scissors size={16} /> },
     { id: 'automation', label: '자동화', icon: <Zap size={16} /> },
     { id: 'education', label: '교육', icon: <Monitor size={16} /> },
   ];
+
   return (
     <div className="sidebar">
-      <div className="sidebar-header"><div className="logo-icon">U</div><div className="logo-text">UCE v15.6</div></div>
-      <div className="category-grid">{categories.map(cat => (<div key={cat.id} className={`category-tab ${activeTab === cat.id ? 'active' : ''}`} onClick={() => setActiveTab(cat.id)}>{cat.icon}<span>{cat.label}</span></div>))}</div>
-      <div className="menu-list"><div className="menu-section-title">메인 메뉴</div><div className="menu-item active"><Video size={14} /><span>워크스페이스</span></div></div>
+      <div className="sidebar-header">
+        <div className="logo-icon">U</div>
+        <div className="logo-text">UCE v15.6</div>
+      </div>
+      
+      <div className="category-grid">
+        {categories.map(cat => (
+          <div 
+            key={cat.id} 
+            className={`category-tab ${activeTab === cat.id ? 'active' : ''}`} 
+            onClick={() => {
+              setActiveTab(cat.id);
+              if (cat.id === 'editor') setIsEditorOpen(true);
+            }}
+          >
+            {cat.icon}
+            <span>{cat.label}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="menu-list">
+        <div className="menu-section-title">메인 메뉴</div>
+        
+        <div className="accordion-group">
+          <div 
+            className={`menu-item ${activeTab === 'editor' ? 'active' : ''} accordion-header`}
+            onClick={() => setIsEditorOpen(!isEditorOpen)}
+          >
+            <div className="accordion-label">
+              <Scissors size={14} />
+              <span>AI 영상편집</span>
+            </div>
+            {isEditorOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+          </div>
+
+          {isEditorOpen && (
+            <div className="sub-menu-list">
+              <div 
+                className={`sub-item ${activeTab === 'editor' && activeSubTab === 'rendering' ? 'active' : ''}`}
+                onClick={() => {
+                  setActiveTab('editor');
+                  setActiveSubTab('rendering');
+                }}
+              >
+                <Video size={14} style={{ marginRight: '8px' }} />
+                AI 영상 렌더링
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="sidebar-footer" style={{ padding: '20px', borderTop: '1px solid var(--border-color)', fontSize: '11px', color: 'var(--text-dim)' }}>
+        <div style={{ fontWeight: 700, color: 'var(--text-main)', marginBottom: '4px' }}>JD</div>
+        <div>John Doe</div>
+        <div style={{ opacity: 0.6 }}>Pro Plan</div>
+      </div>
     </div>
   );
 };

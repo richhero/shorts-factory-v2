@@ -1,14 +1,14 @@
 # STATE.md
 
 ## Current Status
-- **Phase**: Milestone 1, Task 1-2 (Starting).
-- **Recent Accomplishment**: Successfully modularized CSS (Layout, Editor, Modal) and verified UI integrity via Screenshot.
-- **Active Context**: Enhancing the Instruction Analysis engine to handle time mapping (e.g., 13s to 0s).
+- **Phase**: Milestone 1, Task 1-2 (Completed).
+- **Recent Accomplishment**: Successfully reorganized the Sidebar into an accordion-style hierarchy. Renamed "Workspace" to "AI Video Rendering" and embedded it under the "AI Video Editor" accordion. Verified UI integrity via Playwright screenshot.
+- **Active Context**: Transitioning to Task 1-3 to enhance the timeline mapping logic and parsing engine.
 
 ## Active Blockers
 - None.
 
 ## Immediate Next Steps
-1. Refine the parsing logic in `App.jsx` for the "Instruction Analysis Map".
-2. Implement visual feedback for the 13s -> 0s shift in the analysis table.
-3. Prepare back-end logic for real FFmpeg command generation based on this map.
+1. Enhance `TimelineAnalysisMap` in `App.jsx` to parse complex time-shift instructions.
+2. Implement visual indicators for mapped segments in the AI Rendered Result preview.
+3. Sync the updated UI state with the GitHub repository.
