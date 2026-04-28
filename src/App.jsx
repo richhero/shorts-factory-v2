@@ -158,7 +158,7 @@ const TimelineAnalysisMap = ({ instruction }) => {
         </>
       ) : (
         <div className="empty-analysis-state" style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '13px', border: '1px dashed var(--border-color)', borderRadius: '8px', marginTop: '10px' }}>
-          지침서에 '13초 -> 0초'와 같은 시간 매핑 정보를 입력하면<br/>AI가 분석하여 이곳에 표시합니다.
+          지침서에 &apos;13초 → 0초&apos;와 같은 시간 매핑 정보를 입력하면{' '}<br />AI가 분석하여 이곳에 표시합니다.
         </div>
       )}
     </div>
