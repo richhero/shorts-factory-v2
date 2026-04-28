@@ -269,14 +269,14 @@ function App() {
 }
 
 const Sidebar = ({ activeTab, setActiveTab, activeSubTab, setActiveSubTab }) => {
-  const [isEditorOpen, setIsEditorOpen] = useState(true);
-
   const categories = [
     { id: 'discovery', label: '디스커버리', icon: <Search size={16} /> },
-    { id: 'editor', label: 'AI 영상편집', icon: <Scissors size={16} /> },
+    { id: 'editor', label: 'AI 영상편집', icon: <Scissors size={16} />, subItems: [{ id: 'rendering', label: 'AI 영상 렌더링', icon: <Video size={14} /> }] },
     { id: 'automation', label: '자동화', icon: <Zap size={16} /> },
     { id: 'education', label: '교육', icon: <Monitor size={16} /> },
   ];
+
+  const activeCategory = categories.find(c => c.id === activeTab);
 
   return (
     <div className="sidebar">
@@ -290,10 +290,7 @@ const Sidebar = ({ activeTab, setActiveTab, activeSubTab, setActiveSubTab }) => 
           <div 
             key={cat.id} 
             className={`category-tab ${activeTab === cat.id ? 'active' : ''}`} 
-            onClick={() => {
-              setActiveTab(cat.id);
-              if (cat.id === 'editor') setIsEditorOpen(true);
-            }}
+            onClick={() => setActiveTab(cat.id)}
           >
             {cat.icon}
             <span>{cat.label}</span>
@@ -301,35 +298,27 @@ const Sidebar = ({ activeTab, setActiveTab, activeSubTab, setActiveSubTab }) => 
         ))}
       </div>
 
+      {/* 카테고리 직속 아코디언 서브 메뉴 */}
+      {activeCategory?.subItems && (
+        <div className="category-sub-menu">
+          {activeCategory.subItems.map(sub => (
+            <div 
+              key={sub.id} 
+              className={`menu-item sub-item ${activeSubTab === sub.id ? 'active' : ''}`}
+              onClick={() => setActiveSubTab(sub.id)}
+            >
+              {sub.icon}
+              <span>{sub.label}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="menu-list">
         <div className="menu-section-title">메인 메뉴</div>
-        
-        <div className="accordion-group">
-          <div 
-            className={`menu-item ${activeTab === 'editor' ? 'active' : ''} accordion-header`}
-            onClick={() => setIsEditorOpen(!isEditorOpen)}
-          >
-            <div className="accordion-label">
-              <Scissors size={14} />
-              <span>AI 영상편집</span>
-            </div>
-            {isEditorOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-          </div>
-
-          {isEditorOpen && (
-            <div className="sub-menu-list">
-              <div 
-                className={`sub-item ${activeTab === 'editor' && activeSubTab === 'rendering' ? 'active' : ''}`}
-                onClick={() => {
-                  setActiveTab('editor');
-                  setActiveSubTab('rendering');
-                }}
-              >
-                <Video size={14} style={{ marginRight: '8px' }} />
-                AI 영상 렌더링
-              </div>
-            </div>
-          )}
+        <div className="menu-item active">
+          <Layers size={14} />
+          <span>워크스페이스</span>
         </div>
       </div>
 

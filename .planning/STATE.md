@@ -2,13 +2,12 @@
 
 ## Current Status
 - **Phase**: Milestone 1, Task 1-2 (Completed).
-- **Recent Accomplishment**: Successfully reorganized the Sidebar into an accordion-style hierarchy. Renamed "Workspace" to "AI Video Rendering" and embedded it under the "AI Video Editor" accordion. Verified UI integrity via Playwright screenshot.
-- **Active Context**: Transitioning to Task 1-3 to enhance the timeline mapping logic and parsing engine.
+- **Recent Accomplishment**: Refactored the sidebar to integrate the "AI 영상 렌더링" button directly below the active "AI 영상편집" grid button. This creates a more intuitive accordion-like expansion from the top-level categories.
+- **Active Context**: Moving towards Task 1-3 to polish the timeline mapping logic.
 
 ## Active Blockers
 - None.
 
 ## Immediate Next Steps
-1. Enhance `TimelineAnalysisMap` in `App.jsx` to parse complex time-shift instructions.
-2. Implement visual indicators for mapped segments in the AI Rendered Result preview.
-3. Sync the updated UI state with the GitHub repository.
+1. Push the refined UI code to GitHub.
+2. Begin Task 1-3: Advanced Timeline Map Parsing.

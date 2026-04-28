@@ -5,7 +5,7 @@
 - [x] Implement Dual Preview (Split View).
 - [x] Create GSD Codebase Map and Context Guard.
 - [x] **Task 1-1: CSS Modularization** (Split App.css to prevent layout regressions).
-- [ ] **Task 1-2: Sidebar Reorganization & AI Video Rendering Accordion** (Refactor sidebar to group Editor features under Rendering accordion).
+- [ ] **Task 1-2: Grid-Integrated Sidebar Accordion** (Refactor sidebar grid to expand active category into sub-items).
 - [ ] **Task 1-3: Advanced Timeline Map Parsing** (Real-time mapping from Text/JSON).
 
 ## 🚀 Milestone 2: Core AI Video Engine
